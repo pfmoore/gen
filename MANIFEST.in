@@ -1,0 +1,4 @@
+include README.rst
+
+exclude tox.ini
+prune tests

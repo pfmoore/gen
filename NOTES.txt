@@ -1,0 +1,49 @@
+Internal format of a template
+=============================
+
+A template is a list of items. Each item is a dictionary with the following
+elements:
+
+  - name: the file name (directories are created as needed)
+  - directory: boolean, is this file a directory?
+  - encoding: the encoding of the file content (not used if content is binary)
+  - content: the file content
+  - executable: boolean, set the executable bit?
+  - binary: boolean, is the file binary?
+  - renderer: a function to update the content before writing, for example
+    - jinja2 render
+    - base64 decode
+
+Obtaining template items
+========================
+
+Template items can come from:
+
+  - A YAML format definition
+  - A set of files on the filesystem
+  - A set of files from a zip file
+
+Rendering content
+=================
+
+Content can be rendered in a number of ways:
+
+  - Direct copy of the data into the filesystem
+  - Jinja2 templating
+
+File and directory names need rendering as well.
+
+Variables
+=========
+
+Variables are defined in the template, and may be supplied by any of the
+following methods:
+
+  - As parameters in internal API calls
+  - As arguments from the command line
+  - As interactive user input (prompted)
+  - From a configuration file
+    - Global
+    - Per-user
+    - Per-template (possibly, maybe have template name glob matching, maybe YAGNI)
+
