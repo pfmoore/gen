@@ -16,5 +16,5 @@ def test_simple_template(tmpdir):
         cwd=str(tmpdir)
     )
     assert len(dest.listdir()) == 2
-    assert (dest / 'foo').read_text() == 'Hello, world'
-    assert (dest / 'bar').read_text() == 'Hello, bar'
+    assert (dest / 'foo').read_text(encoding='utf-8') == 'Hello, world'
+    assert (dest / 'bar').read_text(encoding='utf-8') == 'Hello, bar'
