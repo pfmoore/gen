@@ -33,7 +33,7 @@ setup(
 
     keywords='packaging development',
     packages=['gen'],
-    install_requires = ['pyyaml'],
+    install_requires = ['pyyaml', 'click'],
     entry_points={
         'console_scripts': [
             'gen=gen:main',

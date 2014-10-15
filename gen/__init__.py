@@ -1,18 +1,12 @@
-from argparse import ArgumentParser
+import click
 from . import generate
 
-def parser():
-    parser = ArgumentParser(description="Generate files from a template")
-    parser.add_argument('template',
-        help="The definition of the template")
-    parser.add_argument('--target', '-d', default='.',
+@click.command()
+@click.argument('template')
+@click.option('--target', '-d', default='.',
         help="Render the template into this target directory (default: cwd)")
-    return parser
-
-def main():
-    p = parser()
-    args = p.parse_args()
-    with open(args.template) as f:
+def main(template, target):
+    "Generate files from TEMPLATE"
+    with open(template) as f:
         defn = f.read()
-    cwd = args.target
-    generate.build_files(defn, cwd)
+    generate.build_files(defn, target)
