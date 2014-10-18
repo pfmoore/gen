@@ -30,6 +30,9 @@ Content can be rendered in a number of ways:
 
   - Direct copy of the data into the filesystem
   - Jinja2 templating
+  - Python format() method
+  - Python %-formatting
+  - StringTemplate $-formatting
 
 File and directory names need rendering as well.
 
@@ -47,3 +50,8 @@ following methods:
     - Per-user
     - Per-template (possibly, maybe have template name glob matching, maybe YAGNI)
 
+Possible enhancements
+=====================
+
+  - "gen pack TEMPLATE" Create a packed template format (maybe sqlite) for
+    templates. Could hold multiple templates per file.

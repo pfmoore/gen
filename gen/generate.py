@@ -17,7 +17,13 @@ def ensuredir(name):
     if not os.path.isdir(name):
         os.mkdir(name)
 
-def build(filename, content=None, directory=False, encoding='utf-8', executable=False, target=None):
+# TODO: Make a builder class, that has target, renderer, name renderer and
+# encoding as attributes?
+def build(filename, content=None, directory=False, encoding='utf-8',
+          executable=False, target=None, renderer=None, variables=None):
+    # TODO: render filename and content independently?
+    if renderer:
+        filename = renderer(filename, variables)
     if target:
         filename = os.path.join(target, filename)
     dirname, basename = os.path.split(filename)
@@ -27,8 +33,13 @@ def build(filename, content=None, directory=False, encoding='utf-8', executable=
     if directory:
         os.mkdir(filename)
         return
-    with io.open(filename, 'w', encoding=encoding) as f:
+    with open(filename, 'wb') as f:
         if content:
+            if renderer:
+                content = renderer(content, variables)
+            # TODO: encode before or after rendering?
+            if encoding:
+                content = content.encode(encoding)
             f.write(content)
     if executable:
         os.chmod(filename, os.stat(filename).st_mode | stat.S_IXUSR)
