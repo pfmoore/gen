@@ -2,6 +2,10 @@ import os
 import click
 from . import generate, loader
 
+def build(defn, target, variables):
+    filename = defn.pop('name')
+    generate.build(filename=filename, target=target, variables=variables, **defn)
+
 @click.command()
 @click.argument('template')
 @click.option('--target', '-d', default='.',
