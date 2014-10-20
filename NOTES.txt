@@ -1,3 +1,51 @@
+The build process
+=================
+
+We start with 3 things:
+
+  - A template definition
+  - A list of substitution variables
+  - A target directory
+
+
+The template definition is a list of individual file templates.
+The list of variables contains the following details:
+
+  - name - the variable name
+  - prompt - boolean or prompt string
+  - default - a default value
+
+External format of a template
+=============================
+
+  version: 1
+  variables:
+    - name: var1
+      prompt: Prompt for variable 1
+      default: default value
+    - name: var2
+      prompt: no
+      default: default value
+  files:
+    - name: <value>
+      content: <value>
+      encoding: utf-8
+      executable: yes
+    - name: dir1
+      directory: yes
+    - name: dir2/
+    - name: emptyfile
+  defaults:
+    encoding: utf-8
+    renderer: none
+    filename_renderer: none
+
+The format of a <value> is one of:
+
+  1. A string
+  2. value: str or from: filename
+     renderer: none
+
 Internal format of a template
 =============================
 
@@ -9,7 +57,7 @@ elements:
   - encoding: the encoding of the file content (not used if content is binary)
   - content: the file content
   - executable: boolean, set the executable bit?
-  - binary: boolean, is the file binary?
+  - binary: boolean, is the file binary? May not be needed (renderer covers this?)
   - renderer: a function to update the content before writing, for example
     - jinja2 render
     - base64 decode
@@ -20,6 +68,7 @@ Obtaining template items
 Template items can come from:
 
   - A YAML format definition
+    - { 'variables': [ { ... }, ... ], 'files': [ ... ] }
   - A set of files on the filesystem
   - A set of files from a zip file
 

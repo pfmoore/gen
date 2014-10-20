@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="gen",
-    version='0.1',
+    version='0.2.dev1',
     description="Generate files from a template",
     long_description="Generate files from a template",
 

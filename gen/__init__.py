@@ -1,6 +1,8 @@
 import os
 import click
-from . import generate, loader
+from . import generate, loader, parser
+
+__version__ = '0.2.dev1'
 
 def build(defn, target, variables):
     filename = defn.pop('name')
@@ -10,12 +12,14 @@ def build(defn, target, variables):
 @click.argument('template')
 @click.option('--target', '-d', default='.',
         help="Render the template into this target directory (default: cwd)")
+@click.version_option(version=__version__)
 def main(template, target):
     "Generate files from TEMPLATE"
     if os.path.isfile(template):
-        with open(template) as f:
-            defn = f.read()
-        generate.build_files(defn, target)
+        files, variables = parser.parse_yaml(template)
+        # Work out how to do variables later
+        for f in files:
+            build(f, target, variables)
     else:
         l = loader.FilesystemLoader(template)
         for name in l.list_templates():
