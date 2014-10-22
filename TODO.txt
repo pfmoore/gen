@@ -1,0 +1,6 @@
+Outstanding changes
+===================
+
+1. Proper design of how templates are stored and located.
+2. Error handling - unknown renderer.
+3. Templates that need jinja2 but it is not installed (see (2)).
