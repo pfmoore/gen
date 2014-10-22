@@ -3,6 +3,8 @@ import io
 import stat
 import yaml
 
+from .renderer import renderers
+
 def ensuredir(name):
     """Make sure directory name exists.
 
@@ -22,6 +24,8 @@ def ensuredir(name):
 def build(filename, content=None, directory=False, encoding='utf-8',
           executable=False, target=None, renderer=None, variables=None):
     # TODO: render filename and content independently?
+    if not callable(renderer):
+        renderer = renderers.get(renderer)
     if renderer:
         filename = renderer(filename, variables)
     if target:
