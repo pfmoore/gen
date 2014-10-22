@@ -93,7 +93,7 @@ def test_ascii_file():
         assert result.exit_code == 0
         out = py.path.local('foo')
         assert out.check(file=1)
-        assert out.read() == 'bar'
+        assert out.read_text(encoding='ascii') == 'bar'
 
 def test_emptyfile_with_version():
     runner = CliRunner()

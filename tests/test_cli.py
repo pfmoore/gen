@@ -5,7 +5,7 @@ def test_basic(tmpdir):
     template = tmpdir / 'template.yaml'
     template.write_text("files:\n - name: foo\n   content: bar", encoding='ascii')
     subprocess.check_call(['gen', '--target', str(tmpdir), str(template)])
-    assert (tmpdir / 'foo').read() == 'bar'
+    assert (tmpdir / 'foo').read_text(encoding='ascii') == 'bar'
 
 def test_simple_template(tmpdir):
     build('test/foo', content='Hello, world', target=str(tmpdir))
@@ -16,5 +16,5 @@ def test_simple_template(tmpdir):
         cwd=str(tmpdir)
     )
     assert len(dest.listdir()) == 2
-    assert (dest / 'foo').read_text(encoding='utf-8') == 'Hello, world'
-    assert (dest / 'bar').read_text(encoding='utf-8') == 'Hello, bar'
+    assert (dest / 'foo').read_text(encoding='ascii') == 'Hello, world'
+    assert (dest / 'bar').read_text(encoding='ascii') == 'Hello, bar'
