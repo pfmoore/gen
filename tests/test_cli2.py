@@ -44,7 +44,10 @@ def test_target():
           files:
             - name: foo
         '''))
-        result = runner.invoke(main, [str(tmpl), '--target', str(target)])
+        # Note: because of the argument parsing for variables, options like
+        # --target must go *before* the template name.
+        # TODO: See if we can relax this restriction.
+        result = runner.invoke(main, ['--target', str(target), str(tmpl)])
         assert result.exit_code == 0
         out = target / 'foo'
         assert out.check(file=1)
