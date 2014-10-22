@@ -11,5 +11,10 @@ def parse_yaml(filename):
     files = defn.get('files', [])
     variables = defn.get('variables', [])
 
-    # Work out how to do defaults later...
+    defaults = defn.get('defaults', {})
+    for f in files:
+        for key in defaults:
+            if key not in f:
+                f[key] = defaults[key]
+
     return files, variables
