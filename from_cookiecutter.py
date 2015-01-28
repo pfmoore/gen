@@ -31,17 +31,20 @@ def spec_from_cookiecutter(dirname):
             spec = {}
             name = os.path.join(basepath, filename)
             spec['name'] = name
+            spec['name_renderer'] = 'jinja2'
             binary_file = is_binary(fullpath)
             if not binary_file:
                 try:
-                    # Do we want to explicitly choose UTF-8?
-                    with open(fullpath) as f:
+                    # Cookiecutter uses the default Jinja2 loader,
+                    # which expects template files to be un utf-8
+                    with open(fullpath, encoding='utf-8') as f:
                         # Read the data first, so we get an error for binary files
                         # before we set encoding or renderer
                         spec['content'] = f.read()
                         spec['encoding'] = f.encoding
                         spec['renderer'] = 'jinja2'
                 except UnicodeDecodeError:
+                    # Looks like it wasn't UTF-8 after all - assume binary
                     binary_file = True
             if binary_file:
                 with open(fullpath, 'rb') as f:
