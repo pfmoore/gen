@@ -1,5 +1,4 @@
 import os
-import click
 
 # Variables are handled as a mapping from name to value. In addition to
 # the basic mapping, it is possible to supplement variable definitions from
@@ -38,13 +37,17 @@ def env_values(prefix):
             result[name] = value
     return result
 
-def prompt_for_missing(dictionary, variables):
+def prompt_for_missing(dictionary, variables, promptfn):
     """Prompt for any variables missing from DICTIONARY.
 
     The VARIABLES should be a list of (name, prompt, default) tuples.
     The user will be prompted for a value for any names that are not already
     present in the DICTIONARY.
+
+    PROMPTFN is the function to use to prompt for a value. Typically this
+    will be click.prompt, but by factoring it out, we can avoid a dependency
+    on click in this file.
     """
     for name, prompt, default in variables:
         if name not in dictionary:
-        dictionary[name] = click.prompt(prompt, default=default)
+        dictionary[name] = promptfn(prompt, default=default)
