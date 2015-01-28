@@ -1,13 +1,18 @@
-from gen.generate import build_files
+from gen.generate import build
 import sys
 import stat
 import textwrap
+import yaml
+
+def build_files(defn, target=None):
+    for defn in yaml.safe_load_all(defn):
+        build(defn, target=target)
 
 def test_empty_file(tmpdir):
     defn = textwrap.dedent("""
         name: foo
     """)
-    build_files(defn, cwd=str(tmpdir))
+    build_files(defn, target=str(tmpdir))
     assert (tmpdir / 'foo').check()
     assert (tmpdir / 'foo').size() == 0
 
@@ -16,14 +21,14 @@ def test_empty_directory(tmpdir):
         name: foo
         directory: yes
     """)
-    build_files(defn, cwd=str(tmpdir))
+    build_files(defn, target=str(tmpdir))
     assert (tmpdir / 'foo').check(dir=1)
 
 def test_trailing_slash(tmpdir):
     defn = textwrap.dedent("""
         name: foo/
     """)
-    build_files(defn, cwd=str(tmpdir))
+    build_files(defn, target=str(tmpdir))
     assert (tmpdir / 'foo').check(dir=1)
 
 def test_set_content(tmpdir):
@@ -31,7 +36,7 @@ def test_set_content(tmpdir):
         name: foo
         content: bar
     """)
-    build_files(defn, cwd=str(tmpdir))
+    build_files(defn, target=str(tmpdir))
     assert (tmpdir / 'foo').read_text(encoding='ascii') == 'bar'
 
 def test_encoding(tmpdir):
@@ -40,7 +45,7 @@ def test_encoding(tmpdir):
         content: \xa3
         encoding: latin-1
     """)
-    build_files(defn, cwd=str(tmpdir))
+    build_files(defn, target=str(tmpdir))
     assert (tmpdir / 'foo').read_binary() == b'\xa3'
 
 def test_encoding_utf8(tmpdir):
@@ -49,7 +54,7 @@ def test_encoding_utf8(tmpdir):
         content: \xa3
         encoding: utf-8
     """)
-    build_files(defn, cwd=str(tmpdir))
+    build_files(defn, target=str(tmpdir))
     assert (tmpdir / 'foo').read_binary() == b'\xc2\xa3'
 
 def test_default_encoding_is_utf8(tmpdir):
@@ -57,14 +62,14 @@ def test_default_encoding_is_utf8(tmpdir):
         name: foo
         content: \xa3
     """)
-    build_files(defn, cwd=str(tmpdir))
+    build_files(defn, target=str(tmpdir))
     assert (tmpdir / 'foo').read_binary() == b'\xc2\xa3'
 
 def test_non_ascii_filename(tmpdir):
     defn = textwrap.dedent("""
         name: foo\xa3
     """)
-    build_files(defn, cwd=str(tmpdir))
+    build_files(defn, target=str(tmpdir))
     assert (tmpdir / 'foo\xa3').check()
 
 def test_multiple_files(tmpdir):
@@ -73,7 +78,7 @@ def test_multiple_files(tmpdir):
         ---
         name: bar
     """)
-    build_files(defn, cwd=str(tmpdir))
+    build_files(defn, target=str(tmpdir))
     assert (tmpdir / 'foo').check()
     assert (tmpdir / 'bar').check()
 
@@ -85,7 +90,7 @@ def test_indented_content(tmpdir):
             Line 2
           Line 3
     """)
-    build_files(defn, cwd=str(tmpdir))
+    build_files(defn, target=str(tmpdir))
     assert (tmpdir / 'foo').read_text(encoding='ascii') == "Line 1\n  Line 2\nLine 3\n"
 
 def test_executable(tmpdir):
@@ -93,7 +98,7 @@ def test_executable(tmpdir):
         name: foo
         executable: yes
     """)
-    build_files(defn, cwd=str(tmpdir))
+    build_files(defn, target=str(tmpdir))
     if not sys.platform.startswith('win'):
         # Executable bit is not relevant on Windows
         assert ((tmpdir / 'foo').stat().mode & stat.S_IXUSR) != 0

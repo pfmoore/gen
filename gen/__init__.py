@@ -4,10 +4,6 @@ from . import generate, loader, parser, cli
 
 __version__ = '0.2.dev1'
 
-def build(defn, target, variables):
-    filename = defn.pop('name')
-    generate.build(filename=filename, target=target, variables=variables, **defn)
-
 class ExtendedCommand(click.Command):
     allow_extra_args = True
     allow_interspersed_args=False
@@ -25,11 +21,15 @@ def main(ctx, template, target):
         files, variables = parser.parse_yaml(template)
         def callback(**kw):
             for f in files:
-                build(f, target, kw)
+                generate.build(f, target=target, variables=kw)
         cmd = cli.variable_parser(variables, callback)
         cmd(ctx.args)
     else:
         l = loader.FilesystemLoader(template)
         for name in l.list_templates():
-            generate.build(name, content=l.get_source(name),
-                           executable=l.get_executable(name), target=target)
+            spec = {
+                'name': name,
+                'content': l.get_source(name),
+                'executable': l.get_executable(name),
+            }
+            generate.build(spec, target=target)

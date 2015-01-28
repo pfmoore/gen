@@ -8,8 +8,8 @@ def test_basic(tmpdir):
     assert (tmpdir / 'foo').read_text(encoding='ascii') == 'bar'
 
 def test_simple_template(tmpdir):
-    build('test/foo', content='Hello, world', target=str(tmpdir))
-    build('test/bar', content='Hello, bar', target=str(tmpdir))
+    build(dict(name='test/foo', content='Hello, world'), target=str(tmpdir))
+    build(dict(name='test/bar', content='Hello, bar'), target=str(tmpdir))
     dest = tmpdir.mkdir('target')
     subprocess.check_call(
         ['gen', '--target', str(dest), 'test'],
