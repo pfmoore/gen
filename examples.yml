@@ -1,5 +1,5 @@
 # Example definitions of templates
---
+---
 name: setup
 variables:
     - name
@@ -9,32 +9,24 @@ variables:
     - email
     - github
 definition:
-    - file: setup.py
+    - name: setup.py
       renderer: format
       content: |
           from setuptools import setup
-  
           setup(
-              name="{name}",
+              name='{name}',
               version='{version}',
               description="{description}",
               long_description="{description}",
-  
               url='http://github.com/{github}/{name}',
-  
               author='{user}',
               author_email='{email}',
-  
               license='MIT',
-  
               classifiers=[
                   'Development Status :: 3 - Alpha',
-  
                   'Intended Audience :: Developers',
                   'Topic :: Software Development :: Build Tools',
-  
                   'License :: OSI Approved :: MIT License',
-  
                   # Consider adding Python 2 support later...
                   # 'Programming Language :: Python :: 2',
                   # 'Programming Language :: Python :: 2.6',
@@ -43,27 +35,25 @@ definition:
                   'Programming Language :: Python :: 3.3',
                   'Programming Language :: Python :: 3.4',
               ],
-  
               keywords='',
               packages=['{name}'],
               install_requires = [],
-              entry_points={
+              entry_points=[
                   'console_scripts': [
                       '{name}={name}:main',
                   ],
-              },
+              ],
           )
-    - file: setup.cfg
-      renderer: none
+    - name: setup.cfg
       content: |
           [bdist_wheel]
           universal=1
---
+---
 name: tox
 variables:
     - name
 definition:
-    file: tox.ini
+    name: tox.ini
     renderer: format
     content: |
         [tox]
