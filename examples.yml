@@ -10,17 +10,20 @@ variables:
     - github
 definition:
     - name: setup.py
-      renderer: format
+      renderer: stringtemplate
       content: |
           from setuptools import setup
           setup(
-              name='{name}',
-              version='{version}',
-              description="{description}",
-              long_description="{description}",
-              url='http://github.com/{github}/{name}',
-              author='{user}',
-              author_email='{email}',
+              name='$name',
+              version='$version',
+
+              description="$description",
+              long_description="$description",
+              url='http://github.com/$github/$name',
+
+              author='$user',
+              author_email='$email',
+
               license='MIT',
               classifiers=[
                   'Development Status :: 3 - Alpha',
@@ -36,12 +39,12 @@ definition:
                   'Programming Language :: Python :: 3.4',
               ],
               keywords='',
-              packages=['{name}'],
+              packages=['$name'],
               install_requires = [],
               entry_points=[
-                  'console_scripts': [
-                      '{name}={name}:main',
-                  ],
+                  'console_scripts': {
+                      '$name=$name:main',
+                  },
               ],
           )
     - name: setup.cfg
